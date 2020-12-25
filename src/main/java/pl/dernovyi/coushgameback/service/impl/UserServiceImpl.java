@@ -182,11 +182,28 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public void updatePassword(String email, String oldPassword, String newPassword) throws EmailNotFoundException, MessagingException, PasswordNotCorrectException {
+        User user = userRepository.findUserByEmail(email);
+        if(user ==null){
+            throw new EmailNotFoundException(NO_USER_FOUND_BY_EMAIL + email);
+        }
+        if(!passwordEncoder.matches(oldPassword, user.getPassword())){
+            throw new PasswordNotCorrectException(YOUR_OLD_PASSWORD_NOT_CORRECT);
+        }
+        user.setPassword(encodePassword(newPassword));
+        userRepository.save(user);
+        emailService.sendNewPasswordEmail(user.getUsername(),newPassword, email);
+    }
+
+    @Override
     public User updateProfileImage(String username, MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, NotAnImageFileException {
         User user = validateNewUsernameAndEmail(username, null, null);
         saveProfileImage(user, profileImage);
         return user;
     }
+
+
+
     private void saveProfileImage(User user, MultipartFile profileImage) throws IOException, NotAnImageFileException {
         if(profileImage != null){
             if(!Arrays.asList(IMAGE_JPEG_VALUE, IMAGE_PNG_VALUE, IMAGE_GIF_VALUE).contains(profileImage.getContentType())){

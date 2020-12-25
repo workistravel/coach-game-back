@@ -72,6 +72,12 @@ public class ExceptionHandling implements ErrorController {
         return createHttpResponse(HttpStatus.BAD_REQUEST, exception.getMessage() );
     }
 
+    @ExceptionHandler(PasswordNotCorrectException.class)
+    public  ResponseEntity<HttpResponse> passwordNotCorrectException(PasswordNotCorrectException exception){
+        return createHttpResponse(HttpStatus.BAD_REQUEST, exception.getMessage() );
+
+    }
+
     @ExceptionHandler(UserNotFoundException.class)
     public  ResponseEntity<HttpResponse> userNotFoundException(UserNotFoundException exception){
         return createHttpResponse(HttpStatus.BAD_REQUEST, exception.getMessage() );
