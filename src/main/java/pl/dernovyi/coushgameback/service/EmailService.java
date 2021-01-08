@@ -46,7 +46,6 @@ public class EmailService {
         properties.put(SMTP_PORT, DEFAULT_PORT);
         properties.put(SMTP_STARTTLS_ENABLE, true);
         properties.put(SMTP_STARTTLS_REQUIRED, true);
-//        properties.put("timeout", "off");
         return Session.getInstance(properties, null);
     }
 }

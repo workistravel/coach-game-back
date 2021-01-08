@@ -53,9 +53,9 @@ public class JwtTokenProvider {
         return usernamePasswordToken;
     }
 
-    public boolean isTokenValid(String username, String token){
+    public boolean isTokenValid(String email, String token){
         JWTVerifier verifier = getJwtVerifier();
-        return StringUtils.isNotEmpty(username) && isTokenExpired(verifier, token);
+        return StringUtils.isNotEmpty(email) && isTokenExpired(verifier, token);
     }
 
     public String getSubject(String token){

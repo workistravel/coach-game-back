@@ -1,12 +1,15 @@
 package pl.dernovyi.coushgameback.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-@Entity
+import java.util.List;
+import java.util.Set;
+
+@Entity(name = "user")
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +19,6 @@ public class User implements Serializable {
     private String userId;
     private String firstName;
     private String lastName;
-    private String username;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private String email;
@@ -25,19 +27,22 @@ public class User implements Serializable {
     private Date lastLoginDateDisplay;
     private Date joinDate;
     private String role;
-    private String[] authorities;
+    private String []  authorities ;
     private boolean isActive;
     private boolean isNonLocked;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private List<Deck> desks;
 
     public User() {
     }
 
-    public User(Long id, String userId, String firstName, String lastName, String username, String password, String email, String profileImageUrl, Date lastLoginData, Date lastLoginDateDisplay, Date joinDate, String role, String[] authorities, boolean isActive, boolean isNonLocked) {
+    public User(Long id, String userId, String firstName, String lastName, String password, String email, String profileImageUrl, Date lastLoginData, Date lastLoginDateDisplay, Date joinDate, String role, String[] authorities, boolean isActive, List<Deck> desks, boolean isNonLocked) {
         this.id = id;
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.username = username;
         this.password = password;
         this.email = email;
         this.profileImageUrl = profileImageUrl;
@@ -47,7 +52,16 @@ public class User implements Serializable {
         this.role = role;
         this.authorities = authorities;
         this.isActive = isActive;
+        this.desks = desks;
         this.isNonLocked = isNonLocked;
+    }
+    @JsonBackReference
+    public List<Deck> getDesks() {
+        return desks;
+    }
+
+    public void setDesks(List<Deck> desks) {
+        this.desks = desks;
     }
 
     public Long getId() {
@@ -80,14 +94,6 @@ public class User implements Serializable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPassword() {
@@ -162,11 +168,8 @@ public class User implements Serializable {
         isActive = active;
     }
 
-    public boolean isNonLocked() {
-        return isNonLocked;
-    }
+    public boolean isNonLocked() { return isNonLocked; }
 
-    public void setNonLocked(boolean nonLocked) {
-        isNonLocked = nonLocked;
-    }
+    public void setNonLocked(boolean nonLocked) { isNonLocked = nonLocked; }
+
 }
