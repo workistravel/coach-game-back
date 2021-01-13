@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>pl.dernovyi</groupId>
-    <artifactId>coush-game-back</artifactId>
+    <artifactId>coach-game-back</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>coush-game-back</name>
+    <name>coach-game-back</name>
     <description>Simple Game For Couch</description>
 
     <properties>

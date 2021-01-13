@@ -84,4 +84,14 @@ public class GameServiceImpl implements GameService {
         userRepository.save(user);
         return gameForDelete.get().getName();
     }
+
+    @Override
+    public Step editStep(String email, Long currentStepId, Long currentDeckId, String titleForStep) throws UserNotFoundException, EmailExistException {
+        User user = this.userService.validateNewEmailAndOldEmail(email, null);
+        Step stepById = this.stepRepository.getById(currentStepId);
+        stepById.setTitle(titleForStep);
+        stepById.setDeckId(currentDeckId);
+        this.stepRepository.save(stepById);
+        return stepById;
+    }
 }

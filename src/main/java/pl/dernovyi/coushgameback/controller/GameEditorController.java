@@ -10,6 +10,7 @@ import pl.dernovyi.coushgameback.exception.UserNotFoundException;
 import pl.dernovyi.coushgameback.model.game_components.Card;
 import pl.dernovyi.coushgameback.model.game_components.Deck;
 import pl.dernovyi.coushgameback.model.game_components.Game;
+import pl.dernovyi.coushgameback.model.game_components.Step;
 import pl.dernovyi.coushgameback.service.GameService;
 
 import java.io.IOException;
@@ -38,6 +39,15 @@ public class GameEditorController {
 
         Game game = gameService.saveGame(loggedEmail, nameGame);
         return new ResponseEntity<>(game, OK);
+    }
+
+    @PostMapping("/add-deck-to-step")
+    public ResponseEntity<Step> editStep(@RequestParam("email") String email,
+                                         @RequestParam("currentStepId") String currentStepId,
+                                         @RequestParam("currentDeckId") String currentDeckId,
+                                         @RequestParam("titleForStep") String titleForStep) throws UserNotFoundException, EmailExistException {
+        Step step = gameService.editStep(email, Long.valueOf(currentStepId) , Long.valueOf(currentDeckId) , titleForStep );
+        return new ResponseEntity<>(step, OK);
     }
     @DeleteMapping("/delete/{email}/{gameId}")
     public ResponseEntity<HttpResponse> deleteDeck(@PathVariable("email") String email, @PathVariable("gameId") String gameId) throws URISyntaxException, StorageException, InvalidKeyException, IOException, UserNotFoundException, EmailExistException {
