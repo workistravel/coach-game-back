@@ -1,8 +1,7 @@
-package pl.dernovyi.coushgameback.model;
+package pl.dernovyi.coushgameback.model.game_components;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Set;
 
 @Entity(name = "card")
 public class Card implements Serializable {

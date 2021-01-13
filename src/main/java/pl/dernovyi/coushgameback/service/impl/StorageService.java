@@ -1,4 +1,4 @@
-package pl.dernovyi.coushgameback.service;
+package pl.dernovyi.coushgameback.service.impl;
 
 import com.microsoft.azure.storage.AccessCondition;
 import com.microsoft.azure.storage.CloudStorageAccount;

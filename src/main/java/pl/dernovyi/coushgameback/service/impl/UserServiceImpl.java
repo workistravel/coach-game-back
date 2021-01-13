@@ -17,12 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.dernovyi.coushgameback.enumeration.Role;
 import pl.dernovyi.coushgameback.exception.*;
-import pl.dernovyi.coushgameback.model.Deck;
 import pl.dernovyi.coushgameback.model.User;
 import pl.dernovyi.coushgameback.model.UserPrincipal;
 import pl.dernovyi.coushgameback.repository.UserRepository;
-import pl.dernovyi.coushgameback.service.EmailService;
-import pl.dernovyi.coushgameback.service.LoginAttemptService;
 import pl.dernovyi.coushgameback.service.UserService;
 
 import javax.mail.MessagingException;

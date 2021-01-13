@@ -2,7 +2,6 @@ package pl.dernovyi.coushgameback.controller;
 
 import com.microsoft.azure.storage.StorageException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,17 +10,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import pl.dernovyi.coushgameback.domain.HttpResponse;
-import pl.dernovyi.coushgameback.model.User;
-import pl.dernovyi.coushgameback.model.UserPrincipal;
-import pl.dernovyi.coushgameback.security.JwtTokenProvider;
-import pl.dernovyi.coushgameback.service.StorageService;
+import pl.dernovyi.coushgameback.service.impl.StorageService;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import static org.springframework.http.HttpStatus.OK;
-import static pl.dernovyi.coushgameback.constant.SecurityConstant.JWT_TOKEN_HEADER;
 
 @RestController
 @RequestMapping("/drop")

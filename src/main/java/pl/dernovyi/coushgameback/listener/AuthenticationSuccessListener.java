@@ -5,7 +5,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.stereotype.Component;
 import pl.dernovyi.coushgameback.model.UserPrincipal;
-import pl.dernovyi.coushgameback.service.LoginAttemptService;
+import pl.dernovyi.coushgameback.service.impl.LoginAttemptService;
 
 @Component
 public class AuthenticationSuccessListener {

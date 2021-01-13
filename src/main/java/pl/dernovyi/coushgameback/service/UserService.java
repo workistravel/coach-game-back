@@ -2,7 +2,6 @@ package pl.dernovyi.coushgameback.service;
 
 import org.springframework.web.multipart.MultipartFile;
 import pl.dernovyi.coushgameback.exception.*;
-import pl.dernovyi.coushgameback.model.Deck;
 import pl.dernovyi.coushgameback.model.User;
 
 import javax.mail.MessagingException;

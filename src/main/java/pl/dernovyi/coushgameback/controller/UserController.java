@@ -1,6 +1,5 @@
 package pl.dernovyi.coushgameback.controller;
 
-import com.microsoft.azure.storage.StorageException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -12,12 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.dernovyi.coushgameback.domain.HttpResponse;
 import pl.dernovyi.coushgameback.exception.*;
-import pl.dernovyi.coushgameback.model.Deck;
 import pl.dernovyi.coushgameback.model.User;
 import pl.dernovyi.coushgameback.model.UserPrincipal;
 import pl.dernovyi.coushgameback.security.JwtTokenProvider;
-import pl.dernovyi.coushgameback.service.DeckService;
-import pl.dernovyi.coushgameback.service.StorageService;
+import pl.dernovyi.coushgameback.service.impl.StorageService;
 import pl.dernovyi.coushgameback.service.UserService;
 
 import javax.mail.MessagingException;
@@ -25,15 +22,11 @@ import javax.mail.MessagingException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.security.InvalidKeyException;
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 import static pl.dernovyi.coushgameback.constant.FileConstant.*;

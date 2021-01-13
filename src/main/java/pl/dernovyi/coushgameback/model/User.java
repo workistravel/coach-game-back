@@ -1,13 +1,15 @@
 package pl.dernovyi.coushgameback.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import pl.dernovyi.coushgameback.model.game_components.Deck;
+import pl.dernovyi.coushgameback.model.game_components.Game;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Entity(name = "user")
 public class User implements Serializable {
@@ -31,31 +33,27 @@ public class User implements Serializable {
     private boolean isActive;
     private boolean isNonLocked;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private List<Deck> desks;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private List<Game> games;
 
     public User() {
     }
 
-    public User(Long id, String userId, String firstName, String lastName, String password, String email, String profileImageUrl, Date lastLoginData, Date lastLoginDateDisplay, Date joinDate, String role, String[] authorities, boolean isActive, List<Deck> desks, boolean isNonLocked) {
-        this.id = id;
-        this.userId = userId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.password = password;
-        this.email = email;
-        this.profileImageUrl = profileImageUrl;
-        this.lastLoginData = lastLoginData;
-        this.lastLoginDateDisplay = lastLoginDateDisplay;
-        this.joinDate = joinDate;
-        this.role = role;
-        this.authorities = authorities;
-        this.isActive = isActive;
-        this.desks = desks;
-        this.isNonLocked = isNonLocked;
+    @JsonIgnore
+    public List<Game> getGames() {
+        return games;
     }
-    @JsonBackReference
+
+    public void setGames(List<Game> games) {
+        this.games = games;
+    }
+
+    @JsonIgnore
     public List<Deck> getDesks() {
         return desks;
     }

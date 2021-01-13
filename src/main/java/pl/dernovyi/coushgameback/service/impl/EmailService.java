@@ -1,4 +1,4 @@
-package pl.dernovyi.coushgameback.service;
+package pl.dernovyi.coushgameback.service.impl;
 
 import com.sun.mail.smtp.SMTPTransport;
 import org.springframework.stereotype.Service;

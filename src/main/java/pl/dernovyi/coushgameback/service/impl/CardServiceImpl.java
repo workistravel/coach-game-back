@@ -5,14 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.dernovyi.coushgameback.exception.EmailExistException;
 import pl.dernovyi.coushgameback.exception.UserNotFoundException;
-import pl.dernovyi.coushgameback.model.Card;
-import pl.dernovyi.coushgameback.model.Deck;
+import pl.dernovyi.coushgameback.model.game_components.Card;
+import pl.dernovyi.coushgameback.model.game_components.Deck;
 import pl.dernovyi.coushgameback.model.User;
 import pl.dernovyi.coushgameback.repository.CardRepository;
 import pl.dernovyi.coushgameback.repository.DeckRepository;
 import pl.dernovyi.coushgameback.repository.UserRepository;
 import pl.dernovyi.coushgameback.service.CardService;
-import pl.dernovyi.coushgameback.service.StorageService;
 import pl.dernovyi.coushgameback.service.UserService;
 
 import java.io.IOException;

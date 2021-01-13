@@ -1,4 +1,4 @@
-package pl.dernovyi.coushgameback.service;
+package pl.dernovyi.coushgameback.service.impl;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;

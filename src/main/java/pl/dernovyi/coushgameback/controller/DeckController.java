@@ -9,16 +9,13 @@ import org.springframework.web.bind.annotation.*;
 import pl.dernovyi.coushgameback.domain.HttpResponse;
 import pl.dernovyi.coushgameback.exception.EmailExistException;
 import pl.dernovyi.coushgameback.exception.UserNotFoundException;
-import pl.dernovyi.coushgameback.model.Deck;
-import pl.dernovyi.coushgameback.model.User;
+import pl.dernovyi.coushgameback.model.game_components.Deck;
 import pl.dernovyi.coushgameback.service.DeckService;
 
-import javax.mail.MessagingException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.util.List;
-import java.util.Set;
 
 import static org.springframework.http.HttpStatus.OK;
 

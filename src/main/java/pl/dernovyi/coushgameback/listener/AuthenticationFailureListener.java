@@ -4,9 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.stereotype.Component;
-import pl.dernovyi.coushgameback.service.LoginAttemptService;
-
-import java.util.concurrent.ExecutionException;
+import pl.dernovyi.coushgameback.service.impl.LoginAttemptService;
 
 @Component
 public class AuthenticationFailureListener {
