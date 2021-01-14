@@ -87,11 +87,43 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Step editStep(String email, Long currentStepId, Long currentDeckId, String titleForStep) throws UserNotFoundException, EmailExistException {
-        User user = this.userService.validateNewEmailAndOldEmail(email, null);
+        this.userService.validateNewEmailAndOldEmail(email, null);
         Step stepById = this.stepRepository.getById(currentStepId);
         stepById.setTitle(titleForStep);
         stepById.setDeckId(currentDeckId);
         this.stepRepository.save(stepById);
         return stepById;
+    }
+
+    @Override
+    public Step saveJudgment(String email, Long stepId, String text) throws UserNotFoundException, EmailExistException {
+        this.userService.validateNewEmailAndOldEmail(email, null);
+        Step step = this.stepRepository.getById(stepId);
+        Judgment judgment = new Judgment();
+        judgment.setJudgment(text);
+        this.judgmentRepository.save(judgment);
+        step.getJudgments().add(judgment);
+        this.stepRepository.save(step);
+        return step;
+    }
+
+    @Override
+    public List<Judgment> getJudgment(Long stepId) {
+        Step step = this.stepRepository.getById(stepId);
+        List<Judgment> judgments = step.getJudgments();
+        return judgments;
+    }
+
+    @Override
+    public void deleteJudgment(Long valueOf) {
+        this.judgmentRepository.deleteById(valueOf);
+    }
+
+    @Override
+    public Judgment editJudgment(Long judgmentId, String text) {
+        Optional<Judgment> judgment = this.judgmentRepository.findById(judgmentId);
+        judgment.get().setJudgment(text);
+        this.judgmentRepository.save(judgment.get());
+        return judgment.get();
     }
 }
