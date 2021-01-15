@@ -11,12 +11,13 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-@Entity(name = "user")
+@Entity
+@Table(name = "user")
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, updatable = false)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+//    @Column(nullable = false, updatable = false)
+//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Long id;
     private String userId;
     private String firstName;

@@ -2,9 +2,10 @@ package pl.dernovyi.coushgameback.model.game_components;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.LinkedList;
 import java.util.List;
-@Entity(name = "step")
+
+@Entity
+@Table(name = "step")
 public class Step implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

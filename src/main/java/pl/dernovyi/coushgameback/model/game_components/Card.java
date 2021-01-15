@@ -3,7 +3,8 @@ package pl.dernovyi.coushgameback.model.game_components;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity(name = "card")
+@Entity
+@Table(name = "card")
 public class Card implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
