@@ -16,7 +16,7 @@ import java.security.InvalidKeyException;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/drop")
 public class AzureBlobController {
     private final StorageService storageService;

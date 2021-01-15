@@ -34,7 +34,7 @@ import static pl.dernovyi.coushgameback.constant.SecurityConstant.JWT_TOKEN_HEAD
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping(path = {"/","/user"})
 public class UserController extends ExceptionHandling {
 
