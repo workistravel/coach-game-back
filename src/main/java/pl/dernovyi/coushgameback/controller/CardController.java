@@ -20,6 +20,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping(path = {"/card"})
 public class CardController {
     public static final String CARD_WAS_DELETED = " карта была удалена";

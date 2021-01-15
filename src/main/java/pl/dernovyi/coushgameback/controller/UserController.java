@@ -40,7 +40,7 @@ public class UserController extends ExceptionHandling {
 
     public static final String EMAIL_SENT = "An email with new password was sent to:  ";
     public static final String USER_DELETED_SUCCESSFULLY = "User deleted successfully";
-    public static final String PASSWORD_WAS_CHANGED = "Your password was changen successfully";
+    public static final String PASSWORD_WAS_CHANGED = "Your password was changed successfully";
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;

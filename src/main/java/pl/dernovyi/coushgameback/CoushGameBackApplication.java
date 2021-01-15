@@ -1,5 +1,6 @@
 package pl.dernovyi.coushgameback;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,9 @@ import static pl.dernovyi.coushgameback.constant.FileConstant.USER_FOLDER;
 @SpringBootApplication
 public class CoushGameBackApplication {
 
+    @Value(value = "${front_address}")
+    private String front_address;
+
     public static void main(String[] args) {
         SpringApplication.run(CoushGameBackApplication.class, args);
         new File(USER_FOLDER).mkdirs();
@@ -27,7 +31,7 @@ public class CoushGameBackApplication {
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+        corsConfiguration.setAllowedOrigins(Collections.singletonList(front_address));
         corsConfiguration.setAllowedHeaders(Arrays.asList("Origin", "Access-Control-Allow-Origin", "Content-Type",
                 "Access", "Jwt-Token", "Authorization", "Origin, Accept", "X-Requested_With",
                 "Access-Control-Request-Method", "Access-Control-Request-Headers"));
