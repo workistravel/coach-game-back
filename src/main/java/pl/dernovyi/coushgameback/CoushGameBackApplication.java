@@ -20,6 +20,8 @@ public class CoushGameBackApplication {
 
     @Value(value = "${front_address}")
     private String front_address;
+    @Value(value = "${CREDENTIALS}")
+    private String access;
 
     public static void main(String[] args) {
         SpringApplication.run(CoushGameBackApplication.class, args);
@@ -30,7 +32,7 @@ public class CoushGameBackApplication {
     public CorsFilter corsFilter(){
         UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.setAllowCredentials(Boolean.parseBoolean(access));
         corsConfiguration.setAllowedOrigins(Collections.singletonList(front_address));
         corsConfiguration.setAllowedHeaders(Arrays.asList("Origin", "Access-Control-Allow-Origin", "Content-Type",
                 "Access", "Jwt-Token", "Authorization", "Origin, Accept", "X-Requested_With",
