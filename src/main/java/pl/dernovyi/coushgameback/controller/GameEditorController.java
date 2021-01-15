@@ -1,6 +1,5 @@
 package pl.dernovyi.coushgameback.controller;
 
-import com.microsoft.azure.storage.StorageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,9 +9,6 @@ import pl.dernovyi.coushgameback.exception.UserNotFoundException;
 import pl.dernovyi.coushgameback.model.game_components.*;
 import pl.dernovyi.coushgameback.service.GameService;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.security.InvalidKeyException;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
