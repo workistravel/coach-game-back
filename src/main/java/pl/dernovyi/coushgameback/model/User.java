@@ -1,10 +1,7 @@
 package pl.dernovyi.coushgameback.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import pl.dernovyi.coushgameback.model.game_components.Deck;
-import pl.dernovyi.coushgameback.model.game_components.Game;
 
 import javax.persistence.*;
 import java.io.Serializable;

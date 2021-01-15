@@ -2,8 +2,7 @@ package pl.dernovyi.coushgameback.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import pl.dernovyi.coushgameback.model.game_components.Game;
-import pl.dernovyi.coushgameback.model.game_components.Judgment;
+import pl.dernovyi.coushgameback.model.Judgment;
 
 import java.util.Optional;
 @Repository

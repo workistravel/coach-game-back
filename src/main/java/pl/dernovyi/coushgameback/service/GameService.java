@@ -2,9 +2,9 @@ package pl.dernovyi.coushgameback.service;
 
 import pl.dernovyi.coushgameback.exception.EmailExistException;
 import pl.dernovyi.coushgameback.exception.UserNotFoundException;
-import pl.dernovyi.coushgameback.model.game_components.Game;
-import pl.dernovyi.coushgameback.model.game_components.Judgment;
-import pl.dernovyi.coushgameback.model.game_components.Step;
+import pl.dernovyi.coushgameback.model.Game;
+import pl.dernovyi.coushgameback.model.Judgment;
+import pl.dernovyi.coushgameback.model.Step;
 
 import java.util.List;
 

@@ -3,7 +3,7 @@ package pl.dernovyi.coushgameback.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import pl.dernovyi.coushgameback.model.game_components.Card;
+import pl.dernovyi.coushgameback.model.Card;
 
 import java.util.Optional;
 

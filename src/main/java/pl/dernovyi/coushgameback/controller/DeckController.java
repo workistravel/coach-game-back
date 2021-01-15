@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.dernovyi.coushgameback.domain.HttpResponse;
 import pl.dernovyi.coushgameback.exception.EmailExistException;
 import pl.dernovyi.coushgameback.exception.UserNotFoundException;
-import pl.dernovyi.coushgameback.model.game_components.Deck;
+import pl.dernovyi.coushgameback.model.Deck;
 import pl.dernovyi.coushgameback.service.DeckService;
 
 import java.io.IOException;

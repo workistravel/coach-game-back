@@ -3,7 +3,7 @@ package pl.dernovyi.coushgameback.service;
 import com.microsoft.azure.storage.StorageException;
 import pl.dernovyi.coushgameback.exception.EmailExistException;
 import pl.dernovyi.coushgameback.exception.UserNotFoundException;
-import pl.dernovyi.coushgameback.model.game_components.Card;
+import pl.dernovyi.coushgameback.model.Card;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

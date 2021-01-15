@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.*;
 import pl.dernovyi.coushgameback.domain.HttpResponse;
 import pl.dernovyi.coushgameback.exception.EmailExistException;
 import pl.dernovyi.coushgameback.exception.UserNotFoundException;
-import pl.dernovyi.coushgameback.model.game_components.*;
+import pl.dernovyi.coushgameback.model.Game;
+import pl.dernovyi.coushgameback.model.Judgment;
+import pl.dernovyi.coushgameback.model.Step;
 import pl.dernovyi.coushgameback.service.GameService;
 
 import java.util.List;
@@ -48,7 +50,7 @@ public class GameEditorController {
 
     @PostMapping("/edit-judgment")
     public ResponseEntity<Judgment>  editJudgment(@RequestParam("judgmentId") String judgmentId,
-                                             @RequestParam("text") String text) throws UserNotFoundException, EmailExistException {
+                                                  @RequestParam("text") String text) throws UserNotFoundException, EmailExistException {
 
         Judgment judgment = gameService.editJudgment(Long.valueOf(judgmentId) , text);
         return new ResponseEntity<>(judgment, OK);

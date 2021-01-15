@@ -2,7 +2,7 @@ package pl.dernovyi.coushgameback.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import pl.dernovyi.coushgameback.model.game_components.Step;
+import pl.dernovyi.coushgameback.model.Step;
 
 @Repository
 public interface StepRepository extends JpaRepository<Step, Long> {

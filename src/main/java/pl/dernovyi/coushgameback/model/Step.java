@@ -1,4 +1,4 @@
-package pl.dernovyi.coushgameback.model.game_components;
+package pl.dernovyi.coushgameback.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
