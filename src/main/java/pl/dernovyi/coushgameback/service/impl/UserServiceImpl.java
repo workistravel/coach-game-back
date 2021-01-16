@@ -51,18 +51,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private BCryptPasswordEncoder passwordEncoder;
     private LoginAttemptService loginAttemptService;
-    private EmailService emailService;
     private EmailGridService emailGridService;
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            BCryptPasswordEncoder passwordEncoder,
                            LoginAttemptService loginAttemptService,
-                           EmailService emailService,
                            EmailGridService emailGridService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.loginAttemptService = loginAttemptService;
-        this.emailService =  emailService;
         this.emailGridService = emailGridService;
     }
 
@@ -108,20 +105,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setLastName(lastName);
         user.setEmail(email);
         user.setJoinDate(new Date());
-
         user.setActive(true);
         user.setNonLocked(true);
         user.setRole(ROLE_USER.name());
-        if(email.equalsIgnoreCase("ladadetal0@gmail.com")){
-            user.setRole(ROLE_SUPER_ADMIN.name());
-            encodedPassword = encodePassword("1");
-        }
         user.setPassword(encodedPassword);
         user.setAuthorities(ROLE_USER.getAuthorities());
         user.setProfileImageUrl(getTemporaryProfileImageUrl(firstName));
         userRepository.save(user);
         emailGridService.sendNewPasswordEmail(user.getFirstName() +" "+ user.getLastName() , password, email);
-//        emailService.sendNewPasswordEmail(user.getFirstName() +" "+ user.getLastName() , password, email);
         LOGGER.info("New user password: "+ password);
         return user;
     }
@@ -144,8 +135,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setProfileImageUrl(getTemporaryProfileImageUrl(firstName));
         userRepository.save(user);
         saveProfileImage(user, profileImage);
-        emailService.sendNewPasswordEmail(user.getFirstName() +" "+ user.getLastName() ,password, newEmail);
-        LOGGER.info("New user password: "+ password);
+        emailGridService.sendNewPasswordEmail(user.getFirstName() +" "+ user.getLastName() ,password, newEmail);
+//        LOGGER.info("New user password: "+ password);
         return user;
     }
 
@@ -185,7 +176,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setPassword(encodePassword(password));
         userRepository.save(user);
         emailGridService.sendNewPasswordEmail(user.getFirstName() +" "+ user.getLastName() ,password, email);
-//        emailService.sendNewPasswordEmail(user.getFirstName() +" "+ user.getLastName() ,password, email);
     }
 
     @Override
@@ -200,7 +190,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setPassword(encodePassword(newPassword));
         userRepository.save(user);
         emailGridService.sendNewPasswordEmail(user.getFirstName() +" "+ user.getLastName() ,newPassword, email);
-//        emailService.sendNewPasswordEmail(user.getFirstName() +" "+ user.getLastName() ,newPassword, email);
     }
 
     @Override
