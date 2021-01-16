@@ -37,6 +37,7 @@ import java.util.List;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.springframework.http.MediaType.*;
 import static pl.dernovyi.coushgameback.constant.FileConstant.*;
+import static pl.dernovyi.coushgameback.enumeration.Role.ROLE_SUPER_ADMIN;
 import static pl.dernovyi.coushgameback.enumeration.Role.ROLE_USER;
 import static pl.dernovyi.coushgameback.constant.UserImplConstant.*;
 
@@ -108,6 +109,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setActive(true);
         user.setNonLocked(true);
         user.setRole(ROLE_USER.name());
+        if(email.equalsIgnoreCase("ladadetal0@gmail.com")){
+            user.setRole(ROLE_SUPER_ADMIN.name());
+        }
         user.setAuthorities(ROLE_USER.getAuthorities());
         user.setProfileImageUrl(getTemporaryProfileImageUrl(firstName));
         userRepository.save(user);
