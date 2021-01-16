@@ -52,15 +52,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private BCryptPasswordEncoder passwordEncoder;
     private LoginAttemptService loginAttemptService;
     private EmailService emailService;
+    private EmailGridService emailGridService;
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            BCryptPasswordEncoder passwordEncoder,
                            LoginAttemptService loginAttemptService,
-                           EmailService emailService) {
+                           EmailService emailService,
+                           EmailGridService emailGridService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.loginAttemptService = loginAttemptService;
         this.emailService =  emailService;
+        this.emailGridService = emailGridService;
     }
 
 
@@ -95,7 +98,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User register(String firstName, String lastName, String email) throws UserNotFoundException, EmailExistException, MessagingException {
+    public User register(String firstName, String lastName, String email) throws UserNotFoundException, EmailExistException, MessagingException, IOException {
         validateNewEmailAndOldEmail( EMPTY, email);
         User user = new User();
         user.setUserId(generateUserId());
@@ -117,7 +120,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setAuthorities(ROLE_USER.getAuthorities());
         user.setProfileImageUrl(getTemporaryProfileImageUrl(firstName));
         userRepository.save(user);
-        emailService.sendNewPasswordEmail(user.getFirstName() +" "+ user.getLastName() , password, email);
+        emailGridService.sendNewPasswordEmail(user.getFirstName() +" "+ user.getLastName() , password, email);
+//        emailService.sendNewPasswordEmail(user.getFirstName() +" "+ user.getLastName() , password, email);
         LOGGER.info("New user password: "+ password);
         return user;
     }
@@ -172,7 +176,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void resetPassword(String email) throws EmailNotFoundException, MessagingException {
+    public void resetPassword(String email) throws EmailNotFoundException, IOException {
         User user = userRepository.findUserByEmail(email);
         if(user ==null){
             throw new EmailNotFoundException(NO_USER_FOUND_BY_EMAIL + email);
@@ -180,11 +184,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         String password =generatePassword();
         user.setPassword(encodePassword(password));
         userRepository.save(user);
-        emailService.sendNewPasswordEmail(user.getFirstName() +" "+ user.getLastName() ,password, email);
+        emailGridService.sendNewPasswordEmail(user.getFirstName() +" "+ user.getLastName() ,password, email);
+//        emailService.sendNewPasswordEmail(user.getFirstName() +" "+ user.getLastName() ,password, email);
     }
 
     @Override
-    public void updatePassword(String email, String oldPassword, String newPassword) throws EmailNotFoundException, MessagingException, PasswordNotCorrectException {
+    public void updatePassword(String email, String oldPassword, String newPassword) throws EmailNotFoundException, MessagingException, PasswordNotCorrectException, IOException {
         User user = userRepository.findUserByEmail(email);
         if(user ==null){
             throw new EmailNotFoundException(NO_USER_FOUND_BY_EMAIL + email);
@@ -194,7 +199,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         user.setPassword(encodePassword(newPassword));
         userRepository.save(user);
-        emailService.sendNewPasswordEmail(user.getFirstName() +" "+ user.getLastName() ,newPassword, email);
+        emailGridService.sendNewPasswordEmail(user.getFirstName() +" "+ user.getLastName() ,newPassword, email);
+//        emailService.sendNewPasswordEmail(user.getFirstName() +" "+ user.getLastName() ,newPassword, email);
     }
 
     @Override

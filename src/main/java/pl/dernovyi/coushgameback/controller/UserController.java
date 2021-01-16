@@ -54,7 +54,7 @@ public class UserController extends ExceptionHandling {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) throws EmailExistException, UsernameExistException, UserNotFoundException, MessagingException {
+    public ResponseEntity<User> register(@RequestBody User user) throws EmailExistException, UsernameExistException, UserNotFoundException, MessagingException, IOException {
         User newUser =  userService.register(user.getFirstName(), user.getLastName(), user.getEmail());
         return new ResponseEntity<>(newUser, OK);
     }
@@ -105,7 +105,7 @@ public class UserController extends ExceptionHandling {
         return new ResponseEntity<>(list, OK);
     }
     @GetMapping("/resetpassword/{email}")
-    public ResponseEntity<HttpResponse> resetPassword(@PathVariable("email") String email) throws EmailNotFoundException, MessagingException {
+    public ResponseEntity<HttpResponse> resetPassword(@PathVariable("email") String email) throws EmailNotFoundException, MessagingException, IOException {
        userService.resetPassword(email);
 
         return response(OK, EMAIL_SENT + email);
@@ -114,7 +114,7 @@ public class UserController extends ExceptionHandling {
     @PostMapping("/updatepassword")
     public ResponseEntity<HttpResponse> updatePassword(@RequestParam("loggedEmail") String loggedEmail,
                                                        @RequestParam("oldPassword") String oldPassword,
-                                                       @RequestParam("newPassword") String newPassword) throws EmailNotFoundException, MessagingException, PasswordNotCorrectException {
+                                                       @RequestParam("newPassword") String newPassword) throws EmailNotFoundException, MessagingException, PasswordNotCorrectException, IOException {
         userService.updatePassword(loggedEmail, oldPassword, newPassword);
         System.out.println(" ");
         return response(OK, PASSWORD_WAS_CHANGED);

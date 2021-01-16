@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface UserService {
 
-    User register (String firstName, String lastName, String email) throws UserNotFoundException, UsernameExistException, EmailExistException, MessagingException;
+    User register (String firstName, String lastName, String email) throws UserNotFoundException, UsernameExistException, EmailExistException, MessagingException, IOException;
 
     List<User> getUsers();
 
@@ -23,11 +23,11 @@ public interface UserService {
 
     void deleteUser(String email) throws IOException;
 
-    void resetPassword(String email) throws EmailNotFoundException, MessagingException;
+    void resetPassword(String email) throws EmailNotFoundException, MessagingException, IOException;
 
     User updateProfileImage(String userId, MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, NotAnImageFileException;
 
-    void updatePassword(String email, String oldPassword, String newPassword) throws EmailNotFoundException, MessagingException, PasswordNotCorrectException;
+    void updatePassword(String email, String oldPassword, String newPassword) throws EmailNotFoundException, MessagingException, PasswordNotCorrectException, IOException;
 
 
     User validateNewEmailAndOldEmail(String currentEmail, String newEmail ) throws EmailExistException, UserNotFoundException;
