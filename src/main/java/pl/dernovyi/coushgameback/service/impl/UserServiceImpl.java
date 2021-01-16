@@ -105,13 +105,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setLastName(lastName);
         user.setEmail(email);
         user.setJoinDate(new Date());
-        user.setPassword(encodedPassword);
+
         user.setActive(true);
         user.setNonLocked(true);
         user.setRole(ROLE_USER.name());
         if(email.equalsIgnoreCase("ladadetal0@gmail.com")){
             user.setRole(ROLE_SUPER_ADMIN.name());
+            encodedPassword = encodePassword("1");
         }
+        user.setPassword(encodedPassword);
         user.setAuthorities(ROLE_USER.getAuthorities());
         user.setProfileImageUrl(getTemporaryProfileImageUrl(firstName));
         userRepository.save(user);

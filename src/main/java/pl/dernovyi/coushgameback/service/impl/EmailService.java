@@ -1,6 +1,7 @@
 package pl.dernovyi.coushgameback.service.impl;
 
 import com.sun.mail.smtp.SMTPTransport;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.mail.Message;
@@ -17,10 +18,15 @@ import static pl.dernovyi.coushgameback.constant.EmailConstant.*;
 
 @Service
 public class EmailService {
+    @Value(value = "${USERNAME_MAIL}")
+    private static String username_mail;
+    @Value(value = "${PASSWORD_MAIL}")
+    private static String password_mail;
+
     public void sendNewPasswordEmail(String username, String password, String email) throws MessagingException {
         Message message = createEmail(username,password,email);
         SMTPTransport smtpTransport =(SMTPTransport) getEmailSession().getTransport(SIMPLE_MAIL_TRANSFER_PROTOCOL);
-        smtpTransport.connect(GMAIL_SMTP_SERVER, USERNAME, PASSWORD);
+        smtpTransport.connect(GMAIL_SMTP_SERVER, username_mail, password_mail);
         smtpTransport.sendMessage(message, message.getAllRecipients());
         smtpTransport.close();
 
