@@ -4,6 +4,8 @@ import com.sendgrid.*;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
 import com.sendgrid.helpers.mail.objects.Email;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +17,13 @@ import static pl.dernovyi.coushgameback.constant.EmailConstant.*;
 public class EmailGridService {
     @Value(value = "${SENDGRID_API_KEY}")
     private String SENDGRID_API_KEY;
-
+    private Logger LOGGER = LoggerFactory.getLogger(EmailGridService.class);
     public void sendNewPasswordEmail(String username, String password, String emailTo) throws  IOException {
         Response response = createResponce(username, password, emailTo);
-        System.out.println(response.getStatusCode());
-        System.out.println(response.getHeaders());
-        System.out.println(response.getBody());
+
+        LOGGER.info(String.valueOf(response.getStatusCode()));
+        LOGGER.info(String.valueOf(response.getHeaders()));
+        LOGGER.info(String.valueOf(response.getBody()));
 
     }
 
