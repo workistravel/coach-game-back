@@ -1,9 +1,16 @@
 package pl.dernovyi.coushgameback.constant;
 
+import org.springframework.beans.factory.annotation.Value;
+
 public class EmailConstant {
+    @Value(value = "${USERNAME}")
+    private static String username;
+    @Value(value = "${PASSWORD}")
+    private static String password;
+
     public static final String SIMPLE_MAIL_TRANSFER_PROTOCOL ="smtps";
-    public static final String USERNAME ="game4coach@gmail.com";
-    public static final String PASSWORD ="game4coach2020";
+    public static final String USERNAME = username;
+    public static final String PASSWORD =password;
     public static final String FROM_EMAIL ="support@game4coach.com";
     public static final String CC_EMAIL ="";
     public static final String EMAIL_SUBJECT ="GameForCoach - New Password";
