@@ -95,7 +95,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User register(String firstName, String lastName, String email) throws UserNotFoundException, EmailExistException, MessagingException, IOException {
+    public User register(String firstName, String lastName, String email) throws UserNotFoundException, EmailExistException, IOException {
         validateNewEmailAndOldEmail( EMPTY, email);
         User user = new User();
         user.setUserId(generateUserId());

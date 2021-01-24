@@ -115,7 +115,6 @@ public class UserController extends ExceptionHandling {
                                                        @RequestParam("oldPassword") String oldPassword,
                                                        @RequestParam("newPassword") String newPassword) throws EmailNotFoundException, MessagingException, PasswordNotCorrectException, IOException {
         userService.updatePassword(loggedEmail, oldPassword, newPassword);
-        System.out.println(" ");
         return response(OK, PASSWORD_WAS_CHANGED);
     }
 

@@ -1,131 +1,96 @@
 package pl.dernovyi.coushgameback.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
+
+import pl.dernovyi.coushgameback.exception.CardLimitException;
 import pl.dernovyi.coushgameback.exception.EmailExistException;
 import pl.dernovyi.coushgameback.exception.UserNotFoundException;
-import pl.dernovyi.coushgameback.model.Game;
-import pl.dernovyi.coushgameback.model.Judgment;
-import pl.dernovyi.coushgameback.model.Step;
-import pl.dernovyi.coushgameback.model.User;
-import pl.dernovyi.coushgameback.repository.GameRepository;
-import pl.dernovyi.coushgameback.repository.JudgmentRepository;
+import pl.dernovyi.coushgameback.model.*;
+import pl.dernovyi.coushgameback.repository.CardRepository;
+import pl.dernovyi.coushgameback.repository.DeckRepository;
 import pl.dernovyi.coushgameback.repository.StepRepository;
-import pl.dernovyi.coushgameback.repository.UserRepository;
 import pl.dernovyi.coushgameback.service.GameService;
 import pl.dernovyi.coushgameback.service.UserService;
 
-import java.util.ArrayList;
+import javax.persistence.LockModeType;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+
+import static pl.dernovyi.coushgameback.constant.GameConstant.CARD_LIMIT;
 
 @Service
 public class GameServiceImpl implements GameService {
-
-    private final UserService userService;
-    private final GameRepository gameRepository;
     private final StepRepository stepRepository;
-    private final UserRepository userRepository;
-    private final JudgmentRepository judgmentRepository;
+    private final DeckRepository deckRepository;
+    private final CardRepository cardRepository;
+    private final UserService userService;
     @Autowired
-    public GameServiceImpl(UserService userService, GameRepository gameRepository, StepRepository stepRepository, UserRepository userRepository, JudgmentRepository judgmentRepository) {
-        this.userService = userService;
-        this.gameRepository = gameRepository;
+    public GameServiceImpl(StepRepository stepRepository, DeckRepository deckRepository, CardRepository cardRepository, UserService userService) {
         this.stepRepository = stepRepository;
-        this.userRepository = userRepository;
-        this.judgmentRepository = judgmentRepository;
+        this.deckRepository = deckRepository;
+        this.cardRepository = cardRepository;
+        this.userService = userService;
     }
 
 
 
 
 
-    @Override
-    public Game saveGame(String loggedEmail, String nameGame) throws UserNotFoundException, EmailExistException {
-        User user = this.userService.validateNewEmailAndOldEmail(loggedEmail, null);
-        Game game = new Game();
-        game.setName(nameGame.toUpperCase());
-        List<Step> steps = new ArrayList<>();
-        for (int i = 0; i < nameGame.length(); i++) {
-            Step step = new Step();
-            step.setName(String.valueOf(nameGame.charAt(i)));
-            steps.add(step);
-        }
-        Step step = new Step();
-        step.setName("Resource");
-        steps.add(step);
-        game.setSteps(steps);
-        this.gameRepository.save(game);
-        user.getGames().add(game);
-        this.userRepository.save(user);
-        return game;
-    }
 
     @Override
-    public List<Game> getGames(String email) throws UserNotFoundException, EmailExistException {
-        User user = this.userService.validateNewEmailAndOldEmail(email, null);
-        List<Game> games =  user.getGames();
-        return games;
-    }
-
-    @Override
-    public String deleteGame(String email, Long gameId) throws UserNotFoundException, EmailExistException {
-        User user = this.userService.validateNewEmailAndOldEmail(email, null);
-        Optional<Game> gameForDelete = this.gameRepository.findById(gameId);
-        List<Step> stepsForDelete = gameForDelete.get().getSteps();
-
-        for (Step step : stepsForDelete) {
-            List<Judgment> judgmentsForDelete = step.getJudgments();
-            for (Judgment judgment : judgmentsForDelete) {
-                this.judgmentRepository.deleteById(judgment.getId());
-            }
-            this.stepRepository.deleteById(step.getId());
-        }
-        this.gameRepository.deleteById(gameForDelete.get().getId());
-        user.getGames().remove(gameForDelete.get());
-        userRepository.save(user);
-        return gameForDelete.get().getName();
-    }
-
-    @Override
-    public Step editStep(String email, Long currentStepId, Long currentDeckId, String titleForStep) throws UserNotFoundException, EmailExistException {
-        this.userService.validateNewEmailAndOldEmail(email, null);
-        Step stepById = this.stepRepository.getById(currentStepId);
-        stepById.setTitle(titleForStep);
-        stepById.setDeckId(currentDeckId);
-        this.stepRepository.save(stepById);
-        return stepById;
-    }
-
-    @Override
-    public Step saveJudgment(String email, Long stepId, String text) throws UserNotFoundException, EmailExistException {
-        this.userService.validateNewEmailAndOldEmail(email, null);
+    public StepForGame getStep(Long stepId) throws CardLimitException {
+        StepForGame stepForGame = new StepForGame();
         Step step = this.stepRepository.getById(stepId);
-        Judgment judgment = new Judgment();
-        judgment.setJudgment(text);
-        this.judgmentRepository.save(judgment);
-        step.getJudgments().add(judgment);
-        this.stepRepository.save(step);
-        return step;
+        Judgment j = getRandomJudgment(step);
+        Card card = getRandomCard(step);
+        stepForGame.setUrlPicture(card.getPictureUrl());
+        stepForGame.setJudgment(j.getJudgment());
+        return stepForGame;
     }
 
     @Override
-    public List<Judgment> getJudgment(Long stepId) {
-        Step step = this.stepRepository.getById(stepId);
+    public void resetUsed(String email) throws UserNotFoundException, EmailExistException {
+        User user = this.userService.validateNewEmailAndOldEmail(email, null);
+        List<Deck> desks = user.getDesks();
+        for (Deck desk : desks) {
+            desk.getCards().forEach(card -> card.setUsed(false));
+            deckRepository.save(desk);
+        }
+    }
+
+    private Judgment getRandomJudgment(Step step) {
+        Random random = new Random();
         List<Judgment> judgments = step.getJudgments();
-        return judgments;
+        if(judgments.size() < 1){
+            return new Judgment();
+        }
+        int i = random.nextInt(judgments.size());
+        return judgments.get(i);
     }
 
-    @Override
-    public void deleteJudgment(Long valueOf) {
-        this.judgmentRepository.deleteById(valueOf);
-    }
+    public Card getRandomCard(Step step) throws CardLimitException {
+        Optional<Deck> deck = this.deckRepository.findById(step.getDeckId());
+        List<Card> cards = deck.get().getCards();
+        Random random = new Random();
 
-    @Override
-    public Judgment editJudgment(Long judgmentId, String text) {
-        Optional<Judgment> judgment = this.judgmentRepository.findById(judgmentId);
-        judgment.get().setJudgment(text);
-        this.judgmentRepository.save(judgment.get());
-        return judgment.get();
+            while (true) {
+                int i = random.nextInt(cards.size());
+                Card temp = cards.get(i);
+                if(!temp.isUsed()){
+                    temp.setUsed(true);
+                    this.deckRepository.save(deck.get());
+                    this.cardRepository.save(temp);
+                    return temp;
+                }
+                if (cards.stream().allMatch(Card::isUsed)){
+                    throw new CardLimitException(CARD_LIMIT);
+                }
+
+            }
+
+
     }
 }

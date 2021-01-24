@@ -2,6 +2,8 @@ package pl.dernovyi.coushgameback.model;
 
 
 
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -47,7 +49,6 @@ public class Deck implements Serializable {
     public void setBackOfCardUrl(String backOfCardUrl) {
         this.backOfCardUrl = backOfCardUrl;
     }
-
 
     public List<Card> getCards() {
         return cards;

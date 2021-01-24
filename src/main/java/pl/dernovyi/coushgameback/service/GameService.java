@@ -1,27 +1,12 @@
 package pl.dernovyi.coushgameback.service;
 
+import pl.dernovyi.coushgameback.exception.CardLimitException;
 import pl.dernovyi.coushgameback.exception.EmailExistException;
 import pl.dernovyi.coushgameback.exception.UserNotFoundException;
-import pl.dernovyi.coushgameback.model.Game;
-import pl.dernovyi.coushgameback.model.Judgment;
-import pl.dernovyi.coushgameback.model.Step;
-
-import java.util.List;
+import pl.dernovyi.coushgameback.model.StepForGame;
 
 public interface GameService {
-    Game saveGame(String loggedEmail, String nameGame) throws UserNotFoundException, EmailExistException;
+    StepForGame getStep(Long stepId) throws CardLimitException;
 
-    List<Game> getGames(String email) throws UserNotFoundException, EmailExistException;
-
-    String deleteGame(String email, Long gameId) throws UserNotFoundException, EmailExistException;
-
-    Step editStep(String email, Long currentStepId, Long currentDeckId, String titleForStep) throws UserNotFoundException, EmailExistException;
-
-    Step saveJudgment(String loggedEmail, Long valueOf, String text) throws UserNotFoundException, EmailExistException;
-
-    List<Judgment> getJudgment(Long valueOf);
-
-    void deleteJudgment(Long valueOf);
-
-    Judgment editJudgment(Long judgmentId, String text);
+    void resetUsed(String email) throws UserNotFoundException, EmailExistException;
 }

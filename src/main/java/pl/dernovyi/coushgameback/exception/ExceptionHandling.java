@@ -83,6 +83,11 @@ public class ExceptionHandling implements ErrorController {
         return createHttpResponse(HttpStatus.BAD_REQUEST, exception.getMessage() );
     }
 
+    @ExceptionHandler(CardLimitException.class)
+    public  ResponseEntity<HttpResponse> userNotFoundException(CardLimitException exception){
+        return createHttpResponse(HttpStatus.NOT_FOUND, exception.getMessage() );
+    }
+
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public  ResponseEntity<HttpResponse> httpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException exception){
         HttpMethod supportedMethod = Objects.requireNonNull(exception.getSupportedHttpMethods()).iterator().next();
