@@ -40,6 +40,11 @@ public class StorageService {
         return uri;
     }
 
+    public void deleteContainer(String id) throws InvalidKeyException, StorageException, URISyntaxException {
+        CloudBlobContainer container = getCloudBlobContainer(id);
+        container.delete();
+    }
+
     public void removeInStorage(String url, String id) throws URISyntaxException, StorageException, IOException, InvalidKeyException {
 
         CloudBlobContainer container = getCloudBlobContainer(id);

@@ -123,7 +123,7 @@ public class UserController extends ExceptionHandling {
 
     @DeleteMapping("/delete/{email}")
     @PreAuthorize("hasAnyAuthority('user:delete')")
-    public ResponseEntity<HttpResponse> deleteUser(@PathVariable("email") String email) throws IOException {
+    public ResponseEntity<HttpResponse> deleteUser(@PathVariable("email") String email) throws IOException, InvalidKeyException, StorageException, URISyntaxException {
         userService.deleteUser(email);
 
         return response(OK, USER_DELETED_SUCCESSFULLY);

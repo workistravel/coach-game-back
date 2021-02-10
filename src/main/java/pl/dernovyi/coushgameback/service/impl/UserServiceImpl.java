@@ -168,10 +168,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void deleteUser(String email) throws IOException {
+    public void deleteUser(String email) throws  InvalidKeyException, StorageException, URISyntaxException {
         User user = userRepository.findUserByEmail(email);
-        Path userFolder = Paths.get(USER_FOLDER + user.getEmail()).toAbsolutePath().normalize();
-        FileUtils.deleteDirectory(new File(userFolder.toString()));
+//        Path userFolder = Paths.get(USER_FOLDER + user.getEmail()).toAbsolutePath().normalize();
+//        FileUtils.deleteDirectory(new File(userFolder.toString()));
+        this.storageService.deleteContainer(user.getUserId());
         userRepository.deleteByEmail(email);
 
     }
@@ -212,21 +213,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 
     private void saveProfileImage(User user, MultipartFile profileImage) throws IOException, NotAnImageFileException, StorageException, InvalidKeyException, URISyntaxException {
-//        if(profileImage != null){
-//            if(!Arrays.asList(IMAGE_JPEG_VALUE, IMAGE_PNG_VALUE, IMAGE_GIF_VALUE).contains(profileImage.getContentType())){
-//                throw new NotAnImageFileException(profileImage.getOriginalFilename() + "is not an image file. Please upload an image");
-//            }
-//            Path userFolder = Paths.get(USER_FOLDER  + user.getUserId()).toAbsolutePath().normalize();
-//            if(!Files.exists(userFolder)){
-//                Files.createDirectories(userFolder);
-//                LOGGER.info(DIRECTORY_CREATED + userFolder);
-//            }
-//            Files.deleteIfExists(Paths.get(userFolder  + user.getUserId() + DOT + JPG_EXTENSION));
-//            Files.copy(profileImage.getInputStream(),userFolder.resolve(user.getUserId() + DOT + JPG_EXTENSION), REPLACE_EXISTING);
-//            user.setProfileImageUrl(setProfileImage( user.getUserId()));
-//            userRepository.save(user);
-//            LOGGER.info(FILE_SAVED_IN_FILE_SYSTEM  + profileImage.getOriginalFilename());
-//        }
         if(profileImage != null){
             if(!Arrays.asList(IMAGE_JPEG_VALUE, IMAGE_PNG_VALUE, IMAGE_GIF_VALUE).contains(profileImage.getContentType())){
                 throw new NotAnImageFileException(profileImage.getOriginalFilename() + "is not an image file. Please upload an image");
@@ -241,9 +227,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
-    private String setProfileImage(String username) {
-        return ServletUriComponentsBuilder.fromCurrentContextPath().path(USER_IMAGE_PATH + username + FORWARD_SLASH + username + DOT + JPG_EXTENSION).toUriString();
-    }
+//    private String setProfileImage(String username) {
+//        return ServletUriComponentsBuilder.fromCurrentContextPath().path(USER_IMAGE_PATH + username + FORWARD_SLASH + username + DOT + JPG_EXTENSION).toUriString();
+//    }
 
     private Role getRoleEnumName(String role) {
         return Role.valueOf(role.toUpperCase());
