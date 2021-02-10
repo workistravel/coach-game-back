@@ -1,5 +1,6 @@
 package pl.dernovyi.coushgameback.service.impl;
 
+import com.microsoft.azure.storage.StorageException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
@@ -27,9 +28,12 @@ import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.InvalidKeyException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -52,16 +56,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private BCryptPasswordEncoder passwordEncoder;
     private LoginAttemptService loginAttemptService;
     private EmailGridService emailGridService;
+    private StorageService storageService;
     @Autowired
-    public UserServiceImpl(UserRepository userRepository,
-                           BCryptPasswordEncoder passwordEncoder,
-                           LoginAttemptService loginAttemptService,
-                           EmailGridService emailGridService) {
+    public UserServiceImpl( UserRepository userRepository,
+                            BCryptPasswordEncoder passwordEncoder,
+                            LoginAttemptService loginAttemptService,
+                            EmailGridService emailGridService,
+                            StorageService storageService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.loginAttemptService = loginAttemptService;
         this.emailGridService = emailGridService;
+        this.storageService = storageService;
     }
+
+
+
 
 
     @Override
@@ -117,7 +127,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return user;
     }
     @Override
-    public User addNewUser(String firstName, String lastName, String newEmail, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, MessagingException, NotAnImageFileException {
+    public User addNewUser(String firstName, String lastName, String newEmail, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, MessagingException, NotAnImageFileException, StorageException, InvalidKeyException, URISyntaxException {
         validateNewEmailAndOldEmail(EMPTY , newEmail);
         User user = new User();
         String password = generatePassword();
@@ -143,7 +153,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 
     @Override
-    public User updateUser(String currentEmail, String newFirstName, String newLastName, String newEmail, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, NotAnImageFileException {
+    public User updateUser(String currentEmail, String newFirstName, String newLastName, String newEmail, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, NotAnImageFileException, StorageException, InvalidKeyException, URISyntaxException {
         User currentUser = validateNewEmailAndOldEmail(currentEmail, newEmail);
         currentUser.setFirstName(newFirstName);
         currentUser.setLastName(newLastName);
@@ -193,7 +203,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User updateProfileImage(String email, MultipartFile profileImage) throws UserNotFoundException, EmailExistException, IOException, NotAnImageFileException {
+    public User updateProfileImage(String email, MultipartFile profileImage) throws UserNotFoundException, EmailExistException, IOException, NotAnImageFileException, StorageException, InvalidKeyException, URISyntaxException {
         User user = validateNewEmailAndOldEmail( email , null);
         saveProfileImage(user, profileImage);
         return user;
@@ -201,21 +211,33 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 
 
-    private void saveProfileImage(User user, MultipartFile profileImage) throws IOException, NotAnImageFileException {
+    private void saveProfileImage(User user, MultipartFile profileImage) throws IOException, NotAnImageFileException, StorageException, InvalidKeyException, URISyntaxException {
+//        if(profileImage != null){
+//            if(!Arrays.asList(IMAGE_JPEG_VALUE, IMAGE_PNG_VALUE, IMAGE_GIF_VALUE).contains(profileImage.getContentType())){
+//                throw new NotAnImageFileException(profileImage.getOriginalFilename() + "is not an image file. Please upload an image");
+//            }
+//            Path userFolder = Paths.get(USER_FOLDER  + user.getUserId()).toAbsolutePath().normalize();
+//            if(!Files.exists(userFolder)){
+//                Files.createDirectories(userFolder);
+//                LOGGER.info(DIRECTORY_CREATED + userFolder);
+//            }
+//            Files.deleteIfExists(Paths.get(userFolder  + user.getUserId() + DOT + JPG_EXTENSION));
+//            Files.copy(profileImage.getInputStream(),userFolder.resolve(user.getUserId() + DOT + JPG_EXTENSION), REPLACE_EXISTING);
+//            user.setProfileImageUrl(setProfileImage( user.getUserId()));
+//            userRepository.save(user);
+//            LOGGER.info(FILE_SAVED_IN_FILE_SYSTEM  + profileImage.getOriginalFilename());
+//        }
         if(profileImage != null){
             if(!Arrays.asList(IMAGE_JPEG_VALUE, IMAGE_PNG_VALUE, IMAGE_GIF_VALUE).contains(profileImage.getContentType())){
                 throw new NotAnImageFileException(profileImage.getOriginalFilename() + "is not an image file. Please upload an image");
             }
-            Path userFolder = Paths.get(USER_FOLDER  + user.getUserId()).toAbsolutePath().normalize();
-            if(!Files.exists(userFolder)){
-                Files.createDirectories(userFolder);
-                LOGGER.info(DIRECTORY_CREATED + userFolder);
+            if(user.getProfileImageUrl().contains(user.getUserId())){
+                this.storageService.removeInStorage(user.getProfileImageUrl() , user.getUserId());
             }
-            Files.deleteIfExists(Paths.get(userFolder  + user.getUserId() + DOT + JPG_EXTENSION));
-            Files.copy(profileImage.getInputStream(),userFolder.resolve(user.getUserId() + DOT + JPG_EXTENSION), REPLACE_EXISTING);
-            user.setProfileImageUrl(setProfileImage( user.getUserId()));
-            userRepository.save(user);
-            LOGGER.info(FILE_SAVED_IN_FILE_SYSTEM  + profileImage.getOriginalFilename());
+                URI uri = this.storageService.saveToStorage(profileImage, user.getUserId());
+                user.setProfileImageUrl(uri.toString());
+                this.userRepository.save(user);
+
         }
     }
 
@@ -228,7 +250,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     }
     private String getTemporaryProfileImageUrl(String name) {
-        return ServletUriComponentsBuilder.fromCurrentContextPath().path(DEFAULT_USER_IMAGE_PATH+ FORWARD_SLASH + name).toUriString();
+        return ServletUriComponentsBuilder.fromCurrentContextPath().path(DEFAULT_USER_IMAGE_PATH + FORWARD_SLASH + name).toUriString();
     }
 
     private String encodePassword(String password) {

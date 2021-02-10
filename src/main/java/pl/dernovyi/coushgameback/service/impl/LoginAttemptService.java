@@ -11,12 +11,12 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 
 @Service
 public class LoginAttemptService {
-    private static final int MAXIMUM_NUMBER_OF_ATTEMPTS =5;
+    private static final int MAXIMUM_NUMBER_OF_ATTEMPTS =7;
     private static final int ATTEMPT_INCREMENT =1;
     private LoadingCache<String, Integer> loginAttemptCache;
     public LoginAttemptService(){
         super();
-        loginAttemptCache = CacheBuilder.newBuilder().expireAfterWrite(15, MINUTES)
+        loginAttemptCache = CacheBuilder.newBuilder().expireAfterWrite(15 , MINUTES)
                 .maximumSize(100)
                 .build(new CacheLoader<String, Integer>() {
                     @Override

@@ -61,14 +61,14 @@ public class DeckServiceImpl implements DeckService {
         List<Card> list = deckForDelete.get().getCards();
 
         for (Card card : list) {
-            this.storageService.removeInStorage(card.getPictureUrl());
+            this.storageService.removeInStorage(card.getPictureUrl(), user.getUserId());
             this.cardRepository.deleteById(card.getId());
         }
 
         user.getDesks().remove(deckForDelete.get());
         this.userRepository.save(user);
         this.deckRepository.deleteById(Long.valueOf(deckId));
-        this.storageService.removeInStorage(deckForDelete.get().getBackOfCardUrl());
+        this.storageService.removeInStorage(deckForDelete.get().getBackOfCardUrl(), user.getUserId());
         return deckForDelete.get().getName();
     }
 

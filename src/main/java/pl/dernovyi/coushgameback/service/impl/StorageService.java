@@ -22,12 +22,10 @@ import java.util.regex.Pattern;
 public class StorageService {
     @Value("${endpoint}")
     private String endpoint;
-    @Value("${nameLibrary}")
-    private String nameLibrary;
 
-    public URI saveToStorage(MultipartFile multipartFile) throws URISyntaxException, StorageException, IOException, InvalidKeyException {
+    public URI saveToStorage(MultipartFile multipartFile, String id) throws URISyntaxException, StorageException, IOException, InvalidKeyException {
         URI uri;
-        CloudBlobContainer image = getCloudBlobContainer();
+        CloudBlobContainer image = getCloudBlobContainer(id);
 
         StringBuilder name = new  StringBuilder()
                 .append(UUID.randomUUID().toString())
@@ -42,24 +40,31 @@ public class StorageService {
         return uri;
     }
 
-    public void removeInStorage(String url) throws URISyntaxException, StorageException, IOException, InvalidKeyException {
+    public void removeInStorage(String url, String id) throws URISyntaxException, StorageException, IOException, InvalidKeyException {
 
-        CloudBlobContainer container = getCloudBlobContainer();
+        CloudBlobContainer container = getCloudBlobContainer(id);
         CloudBlockBlob blockBlobReference = container.getBlockBlobReference(url);
         String prefix = blockBlobReference.getParent().getPrefix();
         String name = url.replaceAll(prefix,"");
         container.getBlockBlobReference(name).deleteIfExists();
     }
 
-    private CloudBlobContainer getCloudBlobContainer() throws URISyntaxException, InvalidKeyException, StorageException {
+    private CloudBlobContainer getCloudBlobContainer(String id) throws URISyntaxException, InvalidKeyException, StorageException {
 
-//        CloudBlobClient blobClient = storageAccount.createCloudBlobClient ();
-//        CloudBlobContainer blobContainer = blobClient.getContainerReference ( «имя-контейнера» );
-        CloudStorageAccount account = CloudStorageAccount.parse(endpoint);;
+        CloudStorageAccount account = CloudStorageAccount.parse(endpoint);
 
         CloudBlobClient client = account.createCloudBlobClient();
 
-        return client.getContainerReference(nameLibrary);
+        CloudBlobContainer container = client.getContainerReference(id);
+        if(container.exists()){
+            return client.getContainerReference(id);
+        }
+
+        container.createIfNotExists();
+        BlobContainerPermissions containerPermissions = new BlobContainerPermissions();
+        containerPermissions.setPublicAccess(BlobContainerPublicAccessType.CONTAINER);
+        container.uploadPermissions(containerPermissions);
+        return container;
 
     }
 

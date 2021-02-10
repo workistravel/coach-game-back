@@ -61,11 +61,12 @@ public class CardServiceImpl implements CardService {
     @Override
     public void removeCard(String loggedEmail, Long deckId, Long cardId) throws UserNotFoundException, EmailExistException, IOException, StorageException, InvalidKeyException, URISyntaxException {
         this.userService.validateNewEmailAndOldEmail(loggedEmail, null);
+        User user = this.userService.validateNewEmailAndOldEmail(loggedEmail, null);
         Optional<Deck> deckById = this.deckRepository.findById(Long.valueOf(deckId));
         Optional<Card> cardById = deckById.get().getCards().stream()
                 .filter(card -> card.getId().equals(cardId))
                 .findFirst();
-        this.storageService.removeInStorage(cardById.get().getPictureUrl());
+        this.storageService.removeInStorage(cardById.get().getPictureUrl(),  user.getUserId() );
         deckById.get().getCards().remove(cardById.get());
         this.cardRepository.deleteById(cardById.get().getId());
         this.deckRepository.save(deckById.get());

@@ -1,5 +1,6 @@
 package pl.dernovyi.coushgameback.controller;
 
+import com.microsoft.azure.storage.StorageException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,9 +23,11 @@ import javax.mail.MessagingException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.InvalidKeyException;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
@@ -73,7 +76,7 @@ public class UserController extends ExceptionHandling {
                                            @RequestParam("email") String email,
                                            @RequestParam("isActive") String isActive,
                                            @RequestParam("isNonLocked") String isNonLocked,
-                                           @RequestParam(value = "profileImage", required = false) MultipartFile multipartFile) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, MessagingException, NotAnImageFileException {
+                                           @RequestParam(value = "profileImage", required = false) MultipartFile multipartFile) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, MessagingException, NotAnImageFileException, StorageException, InvalidKeyException, URISyntaxException {
         User newUser = userService.addNewUser(firstName,lastName,email,role,
                 Boolean.parseBoolean(isNonLocked),Boolean.parseBoolean(isActive),multipartFile);
         return new ResponseEntity<>(newUser, OK);
@@ -87,7 +90,7 @@ public class UserController extends ExceptionHandling {
                                            @RequestParam("email") String email,
                                            @RequestParam("isActive") String isActive,
                                            @RequestParam("isNonLocked") String isNonLocked,
-                                           @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, NotAnImageFileException {
+                                           @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, NotAnImageFileException, StorageException, InvalidKeyException, URISyntaxException {
         User updatedUser = userService.updateUser(currentEmail, firstName,lastName,email,role,
                 Boolean.parseBoolean(isNonLocked),Boolean.parseBoolean(isActive), profileImage);
         return new ResponseEntity<>(updatedUser, OK);
@@ -127,7 +130,7 @@ public class UserController extends ExceptionHandling {
     }
 
     @PostMapping("/updateProfileImage")
-    public ResponseEntity<User> updateProfileImage(@RequestParam("email") String email, @RequestParam(value = "profileImage") MultipartFile multipartFile) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, NotAnImageFileException {
+    public ResponseEntity<User> updateProfileImage(@RequestParam("email") String email, @RequestParam(value = "profileImage") MultipartFile multipartFile) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, NotAnImageFileException, StorageException, InvalidKeyException, URISyntaxException {
         User user = userService.updateProfileImage(email, multipartFile);
         return new ResponseEntity<>(user, OK);
     }
@@ -173,8 +176,4 @@ public class UserController extends ExceptionHandling {
     private void authenticate(String username, String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
     }
-
-
-
-
 }
